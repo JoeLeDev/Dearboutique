@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -91,11 +92,38 @@ export async function POST(request: NextRequest) {
 
     console.log('Email envoyé avec succès:', emailData)
 
+    // Sauvegarde en base de données
+    const { data: appointment, error: dbError } = await supabase
+      .from('appointments')
+      .insert([
+        {
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          phone: phone,
+          service: service,
+          platform: platform,
+          message: message,
+          appointment_date: date,
+          appointment_time: time,
+          status: 'pending'
+        }
+      ])
+      .select()
+
+    if (dbError) {
+      console.error('Erreur lors de la sauvegarde en base:', dbError)
+      // On continue même si la sauvegarde échoue, l'email a été envoyé
+    } else {
+      console.log('Rendez-vous sauvegardé en base:', appointment)
+    }
+
     // Réponse de succès
     return NextResponse.json(
       { 
         message: 'Réservation enregistrée avec succès',
-        reservationId: `RDV-${Date.now()}`
+        reservationId: appointment?.[0]?.id || `RDV-${Date.now()}`,
+        appointmentId: appointment?.[0]?.id
       },
       { status: 200 }
     )

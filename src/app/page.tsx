@@ -19,11 +19,24 @@ export default function Home() {
 
   const handleFormSubmit = async (data: { firstName: string; lastName: string; email: string; phone: string; service: string; platform: string; message: string; date: string; time: string }) => {
     try {
-      // Ici, vous pouvez ajouter l'envoi d'email ou l'intégration avec une API
-      console.log('Données du formulaire:', data)
+      console.log('Envoi des données:', data)
       
-      // Simulation d'envoi réussi
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Appel de l'API pour envoyer l'email et sauvegarder en base
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erreur lors de l\'envoi')
+      }
+
+      console.log('Réservation créée:', result)
       setIsSubmitted(true)
     } catch (error) {
       console.error('Erreur lors de l\'envoi:', error)
