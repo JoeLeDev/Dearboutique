@@ -36,7 +36,7 @@ export default function Home() {
       }
 
       setIsSubmitted(true)
-    } catch (error) {
+    } catch {
       alert('Une erreur est survenue. Veuillez réessayer.')
     }
   }

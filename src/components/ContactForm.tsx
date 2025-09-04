@@ -73,7 +73,7 @@ export default function ContactForm({ selectedDate, selectedTime, onSubmit }: Co
         time: selectedTime
       })
       reset()
-    } catch (error) {
+    } catch {
     } finally {
       setIsSubmitting(false)
     }

@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ appointments }, { status: 200 })
 
-  } catch (error) {
+      } catch {
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }
@@ -69,7 +69,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ appointment: appointment[0] }, { status: 200 })
 
-  } catch (error) {
+      } catch {
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase, Appointment } from '@/lib/supabase'
 import { Calendar, Clock, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 
@@ -9,11 +9,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all')
 
-  useEffect(() => {
-    fetchAppointments()
-  }, [filter])
-
-  const fetchAppointments = async () => {
+  const fetchAppointments = useCallback(async () => {
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -30,11 +26,15 @@ export default function AdminPage() {
       }
 
       setAppointments(filteredData || [])
-    } catch (error) {
+    } catch {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filter])
+
+  useEffect(() => {
+    fetchAppointments()
+  }, [fetchAppointments])
 
   const updateAppointmentStatus = async (id: number, status: 'confirmed' | 'cancelled') => {
     try {
@@ -51,7 +51,7 @@ export default function AdminPage() {
           apt.id === id ? { ...apt, status } : apt
         )
       )
-    } catch (error) {
+    } catch {
     }
   }
 
@@ -103,12 +103,12 @@ export default function AdminPage() {
         {/* Filtres */}
         <div className="mb-6">
           <div className="flex space-x-4">
-            {[
-              { key: 'all', label: 'Tous', count: appointments.length },
-              { key: 'pending', label: 'En attente', count: appointments.filter(a => a.status === 'pending').length },
-              { key: 'confirmed', label: 'Confirmés', count: appointments.filter(a => a.status === 'confirmed').length },
-              { key: 'cancelled', label: 'Annulés', count: appointments.filter(a => a.status === 'cancelled').length }
-            ].map(({ key, label, count }) => (
+            {([
+              { key: 'all' as const, label: 'Tous', count: appointments.length },
+              { key: 'pending' as const, label: 'En attente', count: appointments.filter(a => a.status === 'pending').length },
+              { key: 'confirmed' as const, label: 'Confirmés', count: appointments.filter(a => a.status === 'confirmed').length },
+              { key: 'cancelled' as const, label: 'Annulés', count: appointments.filter(a => a.status === 'cancelled').length }
+            ] as const).map(({ key, label, count }) => (
               <button
                 key={key}
                 onClick={() => setFilter(key as 'all' | 'pending' | 'confirmed' | 'cancelled')}

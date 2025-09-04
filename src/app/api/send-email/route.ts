@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Envoi de l'email de réservation
-    const emailData = await resend.emails.send({
+    await resend.emails.send({
       from: process.env.FROM_EMAIL || 'noreply@dearboutique.com',
       to: [process.env.RESERVATION_EMAIL || 'contact@dearboutique.com'],
       subject: `Nouvelle réservation - ${firstName} ${lastName}`,
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
 
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }
