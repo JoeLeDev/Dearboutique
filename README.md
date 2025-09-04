@@ -35,19 +35,6 @@ npm install
 npm run dev
 ```
 
-## 🌐 Déploiement
-
-### Vercel (Recommandé)
-
-1. Connecter le repository GitHub à Vercel
-2. Configurer les variables d'environnement
-3. Déployer automatiquement
-
-### Autres plateformes
-
-- **Netlify** : Drag & drop du dossier `out`
-- **Firebase Hosting** : `npm run build && firebase deploy`
-
 ## ⚙️ Configuration
 
 ### Variables d'environnement
@@ -80,7 +67,7 @@ SENDGRID_API_KEY=your-sendgrid-key
 ## 🎨 Design System
 
 ### Couleurs principales
-- **Rose** : #db2777 (couleur principale)
+- **Or** : #d4af37 (couleur principale)
 - **Gris** : #6b7280 (texte secondaire)
 - **Blanc** : #ffffff (arrière-plan)
 
