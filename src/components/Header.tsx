@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Heart, Phone, Mail } from 'lucide-react'
+import { Heart } from 'lucide-react'
 
 export default function Header() {
   return (
