@@ -13,7 +13,7 @@ export default function Header() {
             <div className="flex items-center space-x-4">
             </div>
             <div className="hidden md:block">
-              <span>Livraison gratuite dès 70&euro; d'achat</span>
+              <span>Livraison gratuite dès 70&euro; d&apos;achat</span>
             </div>
           </div>
         </div>
