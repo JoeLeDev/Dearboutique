@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase, Appointment } from '@/lib/supabase'
-import { Calendar, Clock, User, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { Calendar, Clock, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 
 export default function AdminPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([])
@@ -31,7 +31,6 @@ export default function AdminPage() {
 
       setAppointments(filteredData || [])
     } catch (error) {
-      console.error('Erreur lors de la récupération des rendez-vous:', error)
     } finally {
       setLoading(false)
     }
@@ -53,7 +52,6 @@ export default function AdminPage() {
         )
       )
     } catch (error) {
-      console.error('Erreur lors de la mise à jour:', error)
     }
   }
 
@@ -113,7 +111,7 @@ export default function AdminPage() {
             ].map(({ key, label, count }) => (
               <button
                 key={key}
-                onClick={() => setFilter(key as any)}
+                onClick={() => setFilter(key as 'all' | 'pending' | 'confirmed' | 'cancelled')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   filter === key
                     ? 'bg-gold-600 text-white'

@@ -74,7 +74,6 @@ export default function ContactForm({ selectedDate, selectedTime, onSubmit }: Co
       })
       reset()
     } catch (error) {
-      console.error('Erreur lors de l\'envoi:', error)
     } finally {
       setIsSubmitting(false)
     }

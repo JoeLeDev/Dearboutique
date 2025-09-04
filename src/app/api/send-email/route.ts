@@ -20,7 +20,6 @@ export async function POST(request: NextRequest) {
     
     // Vérification de la clé API
     if (!process.env.RESEND_API_KEY) {
-      console.error('RESEND_API_KEY manquante dans les variables d\'environnement')
       return NextResponse.json(
         { error: 'Configuration email manquante' },
         { status: 500 }
@@ -90,7 +89,6 @@ export async function POST(request: NextRequest) {
       `,
     })
 
-    console.log('Email envoyé avec succès:', emailData)
 
     // Sauvegarde en base de données
     const { data: appointment, error: dbError } = await supabase
@@ -112,10 +110,8 @@ export async function POST(request: NextRequest) {
       .select()
 
     if (dbError) {
-      console.error('Erreur lors de la sauvegarde en base:', dbError)
       // On continue même si la sauvegarde échoue, l'email a été envoyé
     } else {
-      console.log('Rendez-vous sauvegardé en base:', appointment)
     }
 
     // Réponse de succès
@@ -129,7 +125,6 @@ export async function POST(request: NextRequest) {
     )
 
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email:', error)
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }

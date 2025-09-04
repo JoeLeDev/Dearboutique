@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
     const { data: appointments, error } = await query
 
     if (error) {
-      console.error('Erreur lors de la récupération des rendez-vous:', error)
       return NextResponse.json(
         { error: 'Erreur lors de la récupération des données' },
         { status: 500 }
@@ -36,7 +35,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ appointments }, { status: 200 })
 
   } catch (error) {
-    console.error('Erreur dans l\'API appointments:', error)
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }
@@ -63,7 +61,6 @@ export async function PUT(request: NextRequest) {
       .select()
 
     if (error) {
-      console.error('Erreur lors de la mise à jour:', error)
       return NextResponse.json(
         { error: 'Erreur lors de la mise à jour' },
         { status: 500 }
@@ -73,7 +70,6 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ appointment: appointment[0] }, { status: 200 })
 
   } catch (error) {
-    console.error('Erreur dans l\'API appointments PUT:', error)
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }

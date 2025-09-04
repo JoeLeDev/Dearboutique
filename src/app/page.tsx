@@ -19,7 +19,6 @@ export default function Home() {
 
   const handleFormSubmit = async (data: { firstName: string; lastName: string; email: string; phone: string; service: string; platform: string; message: string; date: string; time: string }) => {
     try {
-      console.log('Envoi des données:', data)
       
       // Appel de l'API pour envoyer l'email et sauvegarder en base
       const response = await fetch('/api/send-email', {
@@ -36,10 +35,8 @@ export default function Home() {
         throw new Error(result.error || 'Erreur lors de l\'envoi')
       }
 
-      console.log('Réservation créée:', result)
       setIsSubmitted(true)
     } catch (error) {
-      console.error('Erreur lors de l\'envoi:', error)
       alert('Une erreur est survenue. Veuillez réessayer.')
     }
   }
