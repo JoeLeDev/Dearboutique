@@ -2,12 +2,43 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, Appointment } from '@/lib/supabase'
-import { Calendar, Clock, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { Calendar, Clock, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle, LogOut } from 'lucide-react'
+import LoginForm from '@/components/LoginForm'
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all')
+
+  // Vérifier l'authentification au chargement
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        setIsAuthenticated(!!session)
+      } catch {
+        setIsAuthenticated(false)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    checkAuth()
+
+    // Écouter les changements d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    setIsAuthenticated(false)
+  }
 
   const fetchAppointments = useCallback(async () => {
     try {
@@ -77,12 +108,18 @@ export default function AdminPage() {
     }
   }
 
-  if (loading) {
+  // Affichage du formulaire de connexion si non authentifié
+  if (!isAuthenticated) {
+    return <LoginForm onLoginSuccess={() => setIsAuthenticated(true)} />
+  }
+
+  // Chargement initial
+  if (isLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement des rendez-vous...</p>
+          <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       </div>
     )
@@ -91,13 +128,22 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            💎 Administration - Dear Boutique
-          </h1>
-          <p className="text-gray-600">
-            Gestion des rendez-vous clients
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              💎 Administration - Dear Boutique
+            </h1>
+            <p className="text-gray-600">
+              Gestion des rendez-vous clients
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Déconnexion</span>
+          </button>
         </div>
 
         {/* Filtres */}
